@@ -14,7 +14,7 @@ const Index = (props) => {
 	// console.log(props.totalNews);
 
 	const loadFunc = async () => {
-		const res = await fetch(`https://newsapi.org/v2/top-headlines?page=${pageNum + 1}&pageSize=10&country=us&category=business&apiKey=${process.env.apiKey}`);
+		const res = await fetch(`https://newsapi.org/v2/top-headlines?page=${pageNum + 1}&pageSize=10&country=in&category=business&apiKey=${process.env.apiKey}`);
 		const totalNews = await res.json();
 
 		let nextTenPageNum = pageNum + 1;
@@ -44,6 +44,10 @@ const Index = (props) => {
 			</InfiniteScroll>
 
 			<style jsx global>{`
+				body {
+					background-color: rgb(242, 242, 240)
+				}
+
 				h2 {
 					color: green;
 					font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
@@ -157,8 +161,8 @@ const Index = (props) => {
 }
 
 Index.getInitialProps = async function () {
-	const res = await fetch(`https://newsapi.org/v2/top-headlines?page=1&pageSize=10&country=us&category=business&apiKey=${process.env.apiKey}`);
-	const allHeadlines = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${process.env.apiKey}`);
+	const res = await fetch(`https://newsapi.org/v2/top-headlines?page=1&pageSize=10&country=in&category=business&apiKey=${process.env.apiKey}`);
+	const allHeadlines = await fetch(`https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${process.env.apiKey}`);
 
 	const totalNews = await res.json();
 	const totalHeadlines = await allHeadlines.json();

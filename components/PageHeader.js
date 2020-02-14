@@ -11,16 +11,20 @@ const Header = () => (
             }
         />
         <style jsx>{`
+            body {
+                margin: 0;
+            }
+
             .headerContainer {
-                border: 2px solid rgb(235, 237, 240);
+                border: 2px solid rgb(192, 238, 240);
                 position: sticky;
                 width: 100%;
                 top: 0;
                 z-index: 1;
-                background: white;
                 display: flex;
                 justify-content: center;
                 height: 70px;
+                background-color: powderblue;
             }
 
             .headingFlex {
@@ -28,7 +32,8 @@ const Header = () => (
             }
 
             .headingNews {
-                color: green;
+                color: black;
+                font-weight: 20px;
                 font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
             }
 
