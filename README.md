@@ -9,5 +9,5 @@ First and foremost, clone this repository, and navigate to the directory. Fire-u
 Now, type `npm run dev` to start the development server, and your app is running at http://localhost:3000/.
 <br>
 
-Although, the App has already been hosted at https://news.reactapp.cf/.<br>
+Although, the App has already been hosted at https://news.reactapp.cf/ or at https://news-3c874.web.app/.<br>
 Happy Coding:)
