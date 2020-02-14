@@ -1,88 +1,175 @@
-import React from 'react'
-import Head from 'next/head'
-import Nav from '../components/nav'
+import React, { useState, Fragment } from 'react';
+import Header from '../components/PageHeader';
+import fetch from 'isomorphic-unfetch';
+import InfiniteScroll from 'react-infinite-scroller';
+import Layout from '../components/Layout';
+import ProgressCircle from '../components/ProgressCircle';
+import Head from 'next/head';
+import GoogleOne from '../public/googleone.jpg';
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Home</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+const Index = (props) => {
+	const [pageNum, setPageNum] = useState(1);
+	const [news, setNews] = useState(props.totalNews);
+	const [hasMore, setHasMore] = useState(true);
+	// console.log(props.totalNews);
 
-    <Nav />
+	const loadFunc = async () => {
+		const res = await fetch(`https://newsapi.org/v2/top-headlines?page=${pageNum + 1}&pageSize=10&country=us&category=business&apiKey=${process.env.apiKey}`);
+		const totalNews = await res.json();
 
-    <div className="hero">
-      <h1 className="title">Welcome to Next.js!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+		let nextTenPageNum = pageNum + 1;
 
-      <div className="row">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Learn more about Next.js in the documentation.</p>
-        </a>
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Next.js Learn &rarr;</h3>
-          <p>Learn about Next.js by following an interactive tutorial!</p>
-        </a>
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Find other example boilerplates on the Next.js GitHub.</p>
-        </a>
-      </div>
-    </div>
+		// console.log(nextTenPageNum);
+		setNews([...news, ...totalNews.articles]); // all news including previous list
+		setPageNum(nextTenPageNum);
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-)
+		if (nextTenPageNum >= props.count / 10) setHasMore(false);
+	}
+	// console.log('hasMore', hasMore);
+	return (
+		<Fragment>
+			<Head>
+				<title>Google-News</title>
+				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+				<link rel="icon" href={ GoogleOne } />
+			</Head>
+			<Header />
+			<InfiniteScroll
+				pageStart={0}
+				loadMore={loadFunc}
+				hasMore={hasMore}
+				loader={<ProgressCircle key={0} />}
+			>
+				<Layout news={news} />
+			</InfiniteScroll>
 
-export default Home
+			<style jsx global>{`
+				h2 {
+					color: green;
+					font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+				}
+
+				.loader {
+					display: flex;
+					justify-content: center;
+					margin: 30px;
+				}
+
+				.container {
+					margin: 16px auto;
+					width: 40%;
+				}
+
+				.cardClass {
+					padding: 20px;
+				}
+
+				.flexbox {
+					display: flex;
+					justify-content: space-between;
+				}
+
+				.image {
+					border-radius: 20px;
+					height: 110px;
+					width: 150px;
+				}
+
+				.metaData {
+					margin-right: 40px;
+					display: block;
+				}
+				
+				p {
+					display: block;
+				}
+
+				.metaDataPhone {
+					display: none;
+				}
+
+				.timeago::before {
+					content: '•';
+					margin-right: 5px;
+					margin-left: 5px;
+				}
+
+				@media only screen and (max-width: 768px) {
+					.flexbox {
+						justify-content: space-between;
+					}
+
+					.container {
+						width: 95%;
+					}
+
+					.cardClass {
+						padding: 10px;
+					}
+
+					.image {
+						height: 90px;
+						width: 110px;
+					}
+
+					.metaDataPhone {
+						margin-right: 8px;
+						display: block;
+					}
+					.metaData {
+						display: none;
+					}
+				}
+
+				@media (min-width: 768px) and (max-width: 1024px) {
+					.flexbox {
+						justify-content: space-between;
+					}
+
+					.container {
+						width: 70%;
+					}
+
+					.image {
+						height: 100px;
+						width: 120px;
+					}
+				}
+
+				@media (min-width: 1024px) and (max-width: 1200px) {
+					.flexbox {
+						justify-content: space-between;
+					}
+
+					.container {
+						width: 60%;
+					}
+
+					.image {
+						height: 100px;
+						width: 110px;
+					}
+				}
+
+			`}</style>
+		</Fragment>
+	)
+}
+
+Index.getInitialProps = async function () {
+	const res = await fetch(`https://newsapi.org/v2/top-headlines?page=1&pageSize=10&country=us&category=business&apiKey=${process.env.apiKey}`);
+	const allHeadlines = await fetch(`https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=${process.env.apiKey}`);
+
+	const totalNews = await res.json();
+	const totalHeadlines = await allHeadlines.json();
+	// console.log(`News data fetched. Count: ${totalNews}`);
+	console.log(totalHeadlines.totalResults);
+
+	return {
+		totalNews: totalNews.articles,
+		count: totalHeadlines.totalResults
+	};
+};
+
+export default Index;
+
