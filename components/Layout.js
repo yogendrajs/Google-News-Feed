@@ -9,7 +9,7 @@ export default function Layout(props) {
         props.news.map((eachNews, index) => {
             return (
                 <div className="container" key={index}>
-                    <a href={eachNews.url} >
+                    <a href={eachNews.url} target="_blank" >
                         <Card hoverable bordered={true} className="cardClass" bodyStyle={{ padding: "0"}} >
                             <div className="flexbox">
                                 <div className="metaData">
