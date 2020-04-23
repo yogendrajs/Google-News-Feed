@@ -1,20 +1,34 @@
-import React, { useState, Fragment } from 'react';
-import Header from '../components/PageHeader';
-import fetch from 'isomorphic-unfetch';
-import InfiniteScroll from 'react-infinite-scroller';
-import Layout from '../components/Layout';
-import ProgressCircle from '../components/ProgressCircle';
-import Head from 'next/head';
-import GoogleOne from '../public/googleone.jpg';
+import React, { useState, useEffect, Fragment } from "react";
+import Header from "../components/PageHeader";
+import fetch from "isomorphic-unfetch";
+import InfiniteScroll from "react-infinite-scroller";
+import Layout from "../components/Layout";
+import ProgressCircle from "../components/ProgressCircle";
+import Head from "next/head";
+import GoogleOne from "../public/googleone.jpg";
+import Top from "../components/BackToTop";
 
 const Index = (props) => {
 	const [pageNum, setPageNum] = useState(1);
 	const [news, setNews] = useState(props.totalNews);
 	const [hasMore, setHasMore] = useState(true);
-	// console.log(props.totalNews);
+	const [pageYOffset, setPageYOffset] = useState(0);
+	
+	useEffect(() => {
+		document.addEventListener('scroll', scrollMethod);
+	}, [])
+
+	const scrollMethod = (e) => {
+		let pageYOffset = Object.assign({}, e.path[1]);
+		setPageYOffset(pageYOffset.pageYOffset);
+	}
 
 	const loadFunc = async () => {
-		const res = await fetch(`https://newsapi.org/v2/top-headlines?page=${pageNum + 1}&pageSize=10&country=in&category=business&apiKey=${process.env.apiKey}`);
+		const res = await fetch(
+			`https://newsapi.org/v2/top-headlines?page=${
+				pageNum + 1
+			}&pageSize=10&country=in&category=business&apiKey=${process.env.apiKey}`
+		);
 		const totalNews = await res.json();
 
 		let nextTenPageNum = pageNum + 1;
@@ -24,14 +38,14 @@ const Index = (props) => {
 		setPageNum(nextTenPageNum);
 
 		if (nextTenPageNum >= props.count / 10) setHasMore(false);
-	}
-	// console.log('hasMore', hasMore);
+	};
+	
 	return (
 		<Fragment>
 			<Head>
 				<title>Google-News</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
-				<link rel="icon" href={ GoogleOne } />
+				<link rel="icon" href={GoogleOne} />
 			</Head>
 			<Header />
 			<InfiniteScroll
@@ -42,15 +56,17 @@ const Index = (props) => {
 			>
 				<Layout news={news} />
 			</InfiniteScroll>
+			<Top pageYOffset={pageYOffset} title="Back To Top" />
 
 			<style jsx global>{`
 				body {
-					background-color: rgb(242, 242, 240)
+					background-color: rgb(242, 242, 240);
 				}
 
 				h2 {
 					color: green;
-					font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Tahoma, sans-serif;
+					font-family: "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
+						"Lucida Sans", Tahoma, sans-serif;
 				}
 
 				.loader {
@@ -83,7 +99,7 @@ const Index = (props) => {
 					margin-right: 40px;
 					display: block;
 				}
-				
+
 				p {
 					display: block;
 				}
@@ -93,9 +109,22 @@ const Index = (props) => {
 				}
 
 				.timeago::before {
-					content: '•';
+					content: "•";
 					margin-right: 5px;
 					margin-left: 5px;
+				}
+
+				.back-to-top {
+					width: 40px;
+					height: 40px;
+					border-radius: 50%;
+					display: inline-block;
+					border: 1px solid gray;
+					background: white;
+					position: fixed;
+					bottom: 40px;
+					right: 30px;
+					padding: 10px;
 				}
 
 				@media only screen and (max-width: 768px) {
@@ -154,15 +183,18 @@ const Index = (props) => {
 						width: 110px;
 					}
 				}
-
 			`}</style>
 		</Fragment>
-	)
-}
+	);
+};
 
 Index.getInitialProps = async function () {
-	const res = await fetch(`https://newsapi.org/v2/top-headlines?page=1&pageSize=10&country=in&category=business&apiKey=${process.env.apiKey}`);
-	const allHeadlines = await fetch(`https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${process.env.apiKey}`);
+	const res = await fetch(
+		`https://newsapi.org/v2/top-headlines?page=1&pageSize=10&country=in&category=business&apiKey=${process.env.apiKey}`
+	);
+	const allHeadlines = await fetch(
+		`https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=${process.env.apiKey}`
+	);
 
 	const totalNews = await res.json();
 	const totalHeadlines = await allHeadlines.json();
@@ -171,9 +203,8 @@ Index.getInitialProps = async function () {
 
 	return {
 		totalNews: totalNews.articles,
-		count: totalHeadlines.totalResults
+		count: totalHeadlines.totalResults,
 	};
 };
 
 export default Index;
-

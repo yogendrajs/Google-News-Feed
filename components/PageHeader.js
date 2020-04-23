@@ -16,7 +16,6 @@ const Header = () => (
             }
 
             .headerContainer {
-                border: 2px solid rgb(192, 238, 240);
                 position: sticky;
                 width: 100%;
                 top: 0;
@@ -24,7 +23,8 @@ const Header = () => (
                 display: flex;
                 justify-content: center;
                 height: 70px;
-                background-color: powderblue;
+                background-color: white;
+                box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.15);
             }
 
             .headingFlex {
