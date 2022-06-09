@@ -24,7 +24,7 @@
     "react-lazy-load-image-component": "^1.4.3",
     "react-scroll": "^1.7.16",
     "react-timeago": "^4.4.0",
-    "snyk": "^1.359.1"
+    "snyk": "^1.934.0"
   },
   "snyk": true
 }
