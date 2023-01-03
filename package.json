@@ -22,7 +22,7 @@
     "react-dom": "16.13.1",
     "react-infinite-scroller": "^1.2.4",
     "react-lazy-load-image-component": "^1.4.3",
-    "react-scroll": "^1.7.16",
+    "react-scroll": "^1.8.9",
     "react-timeago": "^4.4.0",
     "snyk": "^1.359.1"
   },
